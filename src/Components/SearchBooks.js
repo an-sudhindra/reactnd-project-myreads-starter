@@ -12,7 +12,6 @@ export default class SearchBooks extends React.Component {
 
 	render() {
 		return (
-			if(this.state.query)
 			<div className="search-books">
 				<div className="search-books-bar">
 					<Link className="close-search" to="/">Close</Link>

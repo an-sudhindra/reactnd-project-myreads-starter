@@ -17,7 +17,9 @@ export default class Book extends React.Component {
 					<ShelfChanger book={this.props.book} onChangeShelf={ (book, shelf)=> this.props.onChangeShelf(book, shelf)} />
 				</div>
 				<div className="book-title">{this.props.book.title}</div>
-				<div className="book-authors">{this.props.book.authors.join(', ')}</div>
+				<div className="book-authors">
+					{ (Array.isArray(this.props.book.authors)) ? this.props.book.authors.join(', ') : null }
+				</div>
 			</div>
 		);
 	}

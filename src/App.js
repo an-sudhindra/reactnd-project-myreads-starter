@@ -14,13 +14,20 @@ class BooksApp extends React.Component {
 		 * pages, as well as provide a good URL they can bookmark and share.
 		 */
 		showSearchPage: false,
+		query: '',
 		books: []
 	};
 
 	componentDidMount(){
+		// console.log("Getting all books");
+		this.doRefresh();	
+	}
+
+	doRefresh = () =>{
 		BooksAPI.getAll().then( (books) => {
-			// console.log(books);
 			this.setState({ books })
+		}).catch( (err) => {
+			console.log("Error while fetching books : ", err);
 		})
 	}
 
@@ -34,10 +41,46 @@ class BooksApp extends React.Component {
 		})
 	}
 
+	updateSearchQuery = (q) => {
+		this.setState({query: q});
+
+		if( this.state.query.trim().length > 2){
+			BooksAPI.search(this.state.query.trim()).then( (searchResults) => {
+				// console.log(searchResults);
+				this.setState({books: searchResults});
+			}).catch( (err) => {
+				console.log("Error : ", err);
+			})
+		}
+	}
+
+	updateSearchResults(books){
+		// console.log("Updating Serarch Results");
+		// console.log(books);
+		if( Array.isArray(books)) {
+			this.setState({ books }) 
+		} else {
+			// Dummy
+		}
+	}
+
+	doUpdateShelf(book, shelf){
+		BooksAPI.update(book, shelf).then( (res) => {
+			BooksAPI.getAll().then( (books) => {
+				// this.setState({ books })
+				console.log("Shelf updated");
+			})
+		}).catch((err) => {
+			console.log(err);
+		})
+	}
+
 	render() {
 		return (
 			<div className="app">
-				<Route path="/search" component={SearchBooks} />
+				<Route path="/search" render={ () =>
+					<SearchBooks query={this.state.query} books={this.state.books} onSearchResults={this.updateSearchResults} onChange={this.updateSearchQuery} onUpdateShelf={ (book, shelf) => this.doUpdateShelf(book, shelf)} doRefresh={ this.doRefresh}/>
+				} />
 				<Route exact path="/" render={ () => (
 					<ListBooks books={this.state.books} doUpdateShelf={(book, shelf) => this.updateShelf(book, shelf)}/>
 				)} />

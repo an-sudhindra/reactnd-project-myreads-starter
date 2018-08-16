@@ -35,7 +35,6 @@ class BooksApp extends React.Component {
 	}
 
 	render() {
-		console.log(this);
 		return (
 			<div className="app">
 				<Route path="/search" component={SearchBooks} />

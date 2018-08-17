@@ -7,14 +7,14 @@ export default class SearchList extends React.Component {
 	}
 
 	render(){
-		const {books} = this.props; 
+		const { searchBooks } = this.props;
 		return (
 			<div className="search-books-results">
 				<ol className="books-grid">
-					{(Array.isArray(books)) ?
-						books.map( (b, bIndex) => {
+					{(Array.isArray(searchBooks)) ?
+						searchBooks.map( (b, bIndex) => {
 							return <li key={"li_"+bIndex}>
-								<Book book={b} onChangeShelf={ (book, shelf) => this.props.onUpdateShelf(book, shelf) } />
+								<Book book={b}  books={this.props.books} onChangeShelf={ (book, shelf) => this.props.onUpdateShelf(book, shelf) } />
 							</li>
 						} ) : null
 					}

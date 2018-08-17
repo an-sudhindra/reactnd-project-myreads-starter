@@ -15,7 +15,8 @@ class BooksApp extends React.Component {
 		 */
 		showSearchPage: false,
 		query: '',
-		books: []
+		books: [],
+		searchBooks: []
 	};
 
 	componentDidMount(){
@@ -25,7 +26,7 @@ class BooksApp extends React.Component {
 
 	doRefresh = () =>{
 		BooksAPI.getAll().then( (books) => {
-			this.setState({ books })
+			this.setState({ books });
 		}).catch( (err) => {
 			console.log("Error while fetching books : ", err);
 		})
@@ -42,23 +43,32 @@ class BooksApp extends React.Component {
 	}
 
 	updateSearchQuery = (q) => {
-		this.setState({query: q});
+		this.setState( (state) => {
+			this.setState( { query: q });
+		}, () => {
+			// console.log("Updating state is completed : ",this.state.query);
+			if( this.state.query.trim().length % 3 === 0){
+				BooksAPI.search(this.state.query.trim()).then( (searchResults) => {
+					this.setState({searchBooks: searchResults});
+				}).catch( (err) => {
+					console.log("Error : ", err);
+					this.setState({searchBooks: [] });
+				})
+			} else {
+				this.setState({searchBooks: [] });
+			}
+			// this.doSearch();
+		})
+	}
 
-		if( this.state.query.trim().length > 2){
-			BooksAPI.search(this.state.query.trim()).then( (searchResults) => {
-				// console.log(searchResults);
-				this.setState({books: searchResults});
-			}).catch( (err) => {
-				console.log("Error : ", err);
-			})
-		}
+	doSearch = () => {
 	}
 
 	updateSearchResults(books){
 		// console.log("Updating Serarch Results");
 		// console.log(books);
 		if( Array.isArray(books)) {
-			this.setState({ books }) 
+			this.setState({ searchBooks: books }) 
 		} else {
 			// Dummy
 		}
@@ -79,7 +89,7 @@ class BooksApp extends React.Component {
 		return (
 			<div className="app">
 				<Route path="/search" render={ () =>
-					<SearchBooks query={this.state.query} books={this.state.books} onSearchResults={this.updateSearchResults} onChange={this.updateSearchQuery} onUpdateShelf={ (book, shelf) => this.doUpdateShelf(book, shelf)} doRefresh={ this.doRefresh}/>
+					<SearchBooks query={this.state.query} books={this.state.books} searchBooks={this.state.searchBooks} onSearchResults={this.updateSearchResults} onChange={this.updateSearchQuery} onUpdateShelf={ (book, shelf) => this.doUpdateShelf(book, shelf)} doRefresh={ this.doRefresh}/>
 				} />
 				<Route exact path="/" render={ () => (
 					<ListBooks books={this.state.books} doUpdateShelf={(book, shelf) => this.updateShelf(book, shelf)}/>

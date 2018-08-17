@@ -1,27 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import * as BooksAPI from './../BooksAPI';
 import SearchList from './SearchList';
 
 export default class SearchBooks extends React.Component {
-	updateBookQuery = (q) => {
-		this.props.updateSearchQuery(q);
-		// setState({ query: q.trim() });
-		// console.log(this.state.query.trim().length);
-		// if( this.state.query.trim().length > 2){
-		// 	console.log("Searching database....");
-		// 	BooksAPI.search(this.state.query.trim()).then( (searchResults) => {
-		// 		console.log(searchResults);
-		// 		this.props.onSearchResults(searchResults);
-		// 		// setState({books: searchResults});
-		// 	}).catch( (err) => {
-		// 		// this.setState({books: []});
-		// 		this.props.onSearchResults(null);
-		// 		console.log("Error occured while searching : ",err);
-		// 	})
-		// }
-	}
-
 	render() {
 		return (
 			<div className="search-books">
@@ -39,7 +20,7 @@ export default class SearchBooks extends React.Component {
 						<input type="text" placeholder="Search by title or author" value={ this.props.query } onChange={ (event) => this.props.onChange(event.target.value) } />
 					</div>
 				</div>
-				<SearchList books={this.props.books} onUpdateShelf={ (book, shelf) => this.props.onUpdateShelf(book, shelf) } />
+				<SearchList books={this.props.books} searchBooks={this.props.searchBooks} onUpdateShelf={ (book, shelf) => this.props.onUpdateShelf(book, shelf) } />
 			</div>
 		)
 	}

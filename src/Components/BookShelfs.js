@@ -21,7 +21,7 @@ class BookShelfs extends React.Component {
 							{ books.map( (b, bIndex) => {
 								if( b.shelf === shelfsValues[index]) {
 									return <li key={"li_"+bIndex}>
-										<Book book={b} onChangeShelf={ (book, shelf) => this.props.onUpdateShelf(book, shelf)} />
+										<Book book={b} books={books} onChangeShelf={ (book, shelf) => this.props.onUpdateShelf(book, shelf)} />
 									</li>
 								}
 							} ) }
